@@ -87,8 +87,8 @@ public class PlayerH2Service implements PlayerRepository{
         public void deletePlayer(int playerId){
             Player player = db.queryForObject("select * from TEAM where playerId =?",new PlayerRowMapper(),playerId);
             if(player != null){
-                db.update("delete from TEAM where id = ?",playerId);
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+                db.update("delete from TEAM where playerId = ?",playerId);
+            throw new ResponseStatusException(HttpStatus.OK);
 
             }else{
                  
