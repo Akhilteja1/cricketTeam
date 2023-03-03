@@ -39,7 +39,7 @@ public class PlayerH2Service implements PlayerRepository{
     @Override
     public Player getPlayerById(int playerId){
         try{
-            Player player = db.queryForObject("select * from TEAM where id =?",new PlayerRowMapper(),playerId);
+            Player player = db.queryForObject("select * from TEAM where playerId = ? ",new PlayerRowMapper(),playerId);
 
         return player;
 
@@ -51,8 +51,8 @@ public class PlayerH2Service implements PlayerRepository{
 
     @Override
     public Player addPlayer(Player player){
-        db.update("insert into Team(playerName,jerseyNumber,role) values(?,?)",player.getPlayerName(),player.getJerseyNumber(),player.getRole());
-        Player savedPlayer =db.queryForObject("select *from TEAM where playerName = ? and jerseyNumber = ? and role = ? ",new PlayerRowMapper(),player.getPlayerName(),player.getJerseyNumber(),player.getRole());
+        db.update("insert into Team(playerName,jerseyNumber,role) values(?,?,?)",player.getPlayerName(),player.getJerseyNumber(),player.getRole());
+        Player savedPlayer =db.queryForObject("select * from TEAM where playerName = ? and jerseyNumber = ? and role = ? ",new PlayerRowMapper(),player.getPlayerName(),player.getJerseyNumber(),player.getRole());
         return savedPlayer;
     }
 
@@ -71,7 +71,7 @@ public class PlayerH2Service implements PlayerRepository{
 
         @Override
         public void deletePlayer(int playerId){
-            Player player = db.queryForObject("select * from TEAM where id =?",new PlayerRowMapper(),playerId);
+            Player player = db.queryForObject("select * from TEAM where playerId =?",new PlayerRowMapper(),playerId);
             if(player != null){
                 db.update("delete from TEAM where id = ?",playerId);
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
