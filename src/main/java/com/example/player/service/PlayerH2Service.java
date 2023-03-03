@@ -51,19 +51,33 @@ public class PlayerH2Service implements PlayerRepository{
 
     @Override
     public Player addPlayer(Player player){
-        db.update("insert into Team(playerName,jerseyNumber,role) values(?,?,?)",player.getPlayerName(),player.getJerseyNumber(),player.getRole());
+        db.update("insert into TEAM(playerName,jerseyNumber,role) values(?,?,?)",player.getPlayerName(),player.getJerseyNumber(),player.getRole());
         Player savedPlayer =db.queryForObject("select * from TEAM where playerName = ? and jerseyNumber = ? and role = ? ",new PlayerRowMapper(),player.getPlayerName(),player.getJerseyNumber(),player.getRole());
         return savedPlayer;
     }
 
     @Override
     public Player updatePlayer(int playerId, Player player){
-        if(player.getPlayerName() != null){
-            db.update("update player set playerName = ? where playerId = ?",player.getPlayerName(),playerId);
-            db.update("update player set jerseyNumber = ? where playerId = ?",player.getJerseyNumber(),playerId);
-             db.update("update player set role = ? where playerId = ?",player.getRole(),playerId);
+        try{
+            Player checkPlayer = db.queryForObject("select * from TEAM where playerId = ? ",new PlayerRowMapper(),playerId);
+            if(player.getPlayerName() != null){
+            db.update("update TEAM set playerName = ? where playerId = ? ",player.getPlayerName(),playerId);
+            db.update("update TEAM set jerseyNumber = ? where playerId = ? ",player.getJerseyNumber(),playerId);
+            db.update("update TEAM set role = ? where playerId = ? ",player.getRole(),playerId);
         }
         return getPlayerById(playerId);
+
+        
+
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+
+
+
+
+
          
             
             
